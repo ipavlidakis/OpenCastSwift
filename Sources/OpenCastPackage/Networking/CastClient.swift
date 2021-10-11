@@ -536,6 +536,14 @@ public final class CastClient: NSObject, RequestDispatchable, Channelable {
     }
     
     public func setMuted(_ isMuted: Bool, for device: CastMultizoneDevice) {
+        guard device.capabilities.contains(.multizoneGroup) else {
+            print("Attempted to mute zone on non-multizone device")
+            return
+        }
+        
+        multizoneControlChannel.setMuted(isMuted, for: device)
+    }
+}
 extension CastClient: StreamDelegate {
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
